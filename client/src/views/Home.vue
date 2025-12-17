@@ -29,7 +29,8 @@ function goToPrivacy() {
 }
 
 function registerSocket() {
-  const newSocket = io(process.env.VUE_APP_SERVER);
+  const serverUrl = process.env.VUE_APP_SERVER || "http://localhost:3000";
+  const newSocket = io(serverUrl);
   setSocket(newSocket);
   socket.value.on("room", (roomId: string) => {
     hasStarted.value = true;
