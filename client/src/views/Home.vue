@@ -3,7 +3,7 @@ import router from "@/router";
 import { io } from "socket.io-client";
 import { ref, onMounted } from "vue";
 import { useGameEngine } from "@/composables/useGameEngine";
-import GameFormat from "@/view-models/gameFormat";
+import type GameFormat from "@/view-models/gameFormat";
 
 const { socket, setSocket } = useGameEngine();
 const clickedStart = ref(false);
@@ -29,7 +29,8 @@ function goToPrivacy() {
 }
 
 function registerSocket() {
-  const newSocket = io(process.env.VUE_APP_SERVER);
+  const serverUrl = process.env.VUE_APP_SERVER || "http://localhost:3000";
+  const newSocket = io(serverUrl);
   setSocket(newSocket);
   socket.value.on("room", (roomId: string) => {
     hasStarted.value = true;
