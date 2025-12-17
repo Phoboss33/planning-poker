@@ -59,8 +59,6 @@
       </div>
 
       <div class="top-left">
-        <PFLittleButton type="github" popover-text="Open repo" @clicked="goToGithub()"></PFLittleButton>
-        <PFLittleButton type="pwa" popover-text="Install as app" @clicked="installPWA()"></PFLittleButton>
         <PFLittleButton type="settings" popover-text="Settings" @clicked="()=>{settings = true;}"></PFLittleButton>
         <div class="voting-on" v-if="votingOnName">
           <p class="voting-on-label">Voting on: <b>{{ votingOnName }}</b></p>
@@ -130,9 +128,8 @@ import {useGameEngine} from "@/composables/useGameEngine";
 import PFLittleButton from "@/components/LittleButton.vue";
 import Settings from "../components/SettingsModal.vue";
 import Sharing from "../components/SharingModal.vue";
-import GameFormat from "@/view-models/gameFormat";
-
-let showInstallPwa = ref(false);
+import type GameFormat from "@/view-models/gameFormat";
+import SERVER_URL from "@/utils/serverUrl";
 const modal = ref(true);
 const settings = ref(false)
 const showCopiedToClipboard = ref(false);
@@ -152,14 +149,6 @@ const {
 } = useGameEngine();
 const showShareModal = ref(false);
 
-let deferredPrompt: any;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  showInstallPwa.value = true;
-});
-
 function saveSettings(gameType: GameFormat) {
   settings.value = false;
   socket.value.emit("gameTypeChanged", gameType);
@@ -169,14 +158,10 @@ async function dismissModal() {
   showShareModal.value = false;
 }
 
-function installPWA() {
-  deferredPrompt.prompt();
-}
-
 onMounted(() => {
   if (joiningAGame()) {
     const route = useRoute();
-    const newSocket = io(process.env.VUE_APP_SERVER, {
+    const newSocket = io(SERVER_URL, {
       query: {
         roomId: route.params.id,
       },
@@ -230,10 +215,6 @@ function playerHasVoted() {
 
 function copyToClipboard() {
   showShareModal.value = true;
-}
-
-function goToGithub() {
-  open("https://github.com/LukeGarrigan/planfree.dev");
 }
 
 function joiningAGame() {

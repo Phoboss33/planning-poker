@@ -23,7 +23,54 @@ Try it out with your team, it's currently live at [planfree.dev](https://www.pla
 
 ![image](https://user-images.githubusercontent.com/12545967/124085610-2351dc80-da48-11eb-960d-af548db474e9.png)
 
-## Setup Local Dev  
+## Setup Local Dev
 
-- [Server](./server/README)
-- [Client](./client/ReadMe.md)
+- [Server](./server/README.md)
+- [Client](./client/README.md)
+
+### Быстрый запуск локально (сервер + клиент)
+1. Скопируйте пример переменных окружения и при необходимости обновите значения:
+   - Сервер: `cp server/example/.env server/.env`
+   - Клиент: `cp client/example/.env client/.env`
+   - Клиент берёт адрес из `VUE_APP_SERVER`, если он задан и не содержит `localhost`. Иначе он возьмёт хост текущей страницы и подставит порт `3000`. Если фронтенд и бэкенд на разных хостах/портах, обязательно пропишите точный URL бэкенда в `VUE_APP_SERVER`.
+2. Установите зависимости:
+   - Сервер: `cd server && npm install`
+   - Клиент: в другом терминале `cd client && npm install`
+3. Запустите приложения в двух терминалах:
+   - Сервер: `npm start` (порт `3000`)
+   - Клиент: `npm run serve` (порт `8081` по умолчанию)
+4. Откройте клиент в браузере по адресу `http://localhost:8081`. Сообщение `Network: unavailable` в логе клиента означает, что dev‑сервер не расшаривает адрес в локальную сеть Windows и не влияет на подключение к вашему бэкенду.
+
+### Развёртывание на сервере (Ubuntu, пример для `http://147.45.183.5:8080`)
+
+1. Установите зависимости системы и Node.js 18+:
+   ```bash
+   sudo apt update
+   sudo apt install -y curl git
+   curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+   sudo apt install -y nodejs
+   ```
+
+2. Склонируйте репозиторий и подготовьте переменные окружения:
+   ```bash
+   git clone <ваш-форк-или-репозиторий>
+   cd planning-poker
+   cp server/example/.env server/.env
+   cp client/example/.env client/.env
+   ```
+   Обязательно укажите в `server/.env` переменную `ORIGIN=http://147.45.183.5:8080` (или ваш домен/порт через запятую), чтобы CORS совпадал с фронтендом.
+   В `client/.env` задайте `VUE_APP_SERVER` только если бэкенд на другом хосте/порте. Если фронтенд и бэкенд на одном хосте, оставьте переменную пустой — клиент сам возьмёт текущий хост и порт `3000`. Иначе пропишите публичный URL бэкенда (например, `http://147.45.183.5:3000` или адрес reverse‑proxy), чтобы исключить обращения к `localhost` после сборки.
+
+3. Соберите клиент и поднимите сервер:
+   ```bash
+   cd client && npm install && npm run build
+   cd ../server && npm install
+   npm start   # или pm2/systemd в продакшене
+   ```
+
+4. Раздайте статический клиент любым веб-сервером (например, Nginx):
+   - скопируйте содержимое `client/dist` в директорию, которую обслуживает Nginx для порта `8080`;
+   - убедитесь, что Nginx проксирует только фронтенд, а запросы socket.io идут напрямую на `http://147.45.183.5:3000` (или через отдельный location `/socket.io` с proxy_pass на backend);
+   - при необходимости откройте порты `8080` и `3000` в брандмауэре.
+
+5. После изменения `.env` перезапускайте backend, чтобы обновились разрешённые `ORIGIN` заголовки. Клиент достаточно собрать заново, если меняли `VUE_APP_SERVER`.
