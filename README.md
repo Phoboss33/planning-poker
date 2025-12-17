@@ -32,7 +32,7 @@ Try it out with your team, it's currently live at [planfree.dev](https://www.pla
 1. Скопируйте пример переменных окружения и при необходимости обновите значения:
    - Сервер: `cp server/example/.env server/.env`
    - Клиент: `cp client/example/.env client/.env`
-   - По умолчанию клиент подключается к `http://localhost:3000`. Если вы изменили порт сервера, укажите URL в `VUE_APP_SERVER` в `client/.env`.
+   - По умолчанию клиент берёт адрес из `VUE_APP_SERVER` (если не задан, берёт текущий origin страницы). Лучше явно указать URL бэкенда в `VUE_APP_SERVER`, чтобы избежать обращений к `localhost` после сборки.
 2. Установите зависимости:
    - Сервер: `cd server && npm install`
    - Клиент: в другом терминале `cd client && npm install`
@@ -59,7 +59,7 @@ Try it out with your team, it's currently live at [planfree.dev](https://www.pla
    cp client/example/.env client/.env
    ```
    Обязательно укажите в `server/.env` переменную `ORIGIN=http://147.45.183.5:8080` (или ваш домен/порт через запятую), чтобы CORS совпадал с фронтендом.
-   В `client/.env` проверьте `VUE_APP_SERVER` — по умолчанию `http://localhost:3000`; если сервер будет доступен снаружи, впишите публичный URL, например `http://147.45.183.5:3000`.
+   В `client/.env` пропишите `VUE_APP_SERVER` на публичный URL бэкенда (например, `http://147.45.183.5:3000` или адрес reverse‑proxy). Это гарантирует, что собранный клиент не попытается подключиться к `localhost`.
 
 3. Соберите клиент и поднимите сервер:
    ```bash
