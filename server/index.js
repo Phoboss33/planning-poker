@@ -2,9 +2,11 @@ const app = require('express')();
 const http = require('http').createServer(app);
 const short = require('short-uuid');
 require('dotenv').config()
+const DEFAULT_ORIGINS = ['http://localhost:8081', 'http://localhost:8080'];
+const ALLOWED_ORIGINS = (process.env.ORIGIN || '').split(',').map(o => o.trim()).filter(Boolean);
 const io = require("socket.io")(http, {
     cors: {
-        origin: process.env.ORIGIN || 'http://localhost:8081',
+        origin: ALLOWED_ORIGINS.length ? ALLOWED_ORIGINS : DEFAULT_ORIGINS,
         methods: ["GET", "POST"]
     }
 });
