@@ -1,6 +1,6 @@
-import GameFormat from "./gameFormat";
-import Ticket from "@/view-models/tickets";
-import Player from "./player";
+import type GameFormat from "./gameFormat";
+import type Ticket from "@/view-models/tickets";
+import type Player from "./player";
 
 export default interface Game {
     players: Player[];
