@@ -2,7 +2,7 @@ import {ref} from "vue";
 import Player from "@/view-models/player";
 import Game from "@/view-models/game";
 import Ticket from "@/view-models/tickets";
-import GameFormat from "@/view-models/gameFormat";
+import type GameFormat from "@/view-models/gameFormat";
 
 const players = ref<Player[]>([]);
 const socket = ref({} as any);
