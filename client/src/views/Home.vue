@@ -4,6 +4,7 @@ import { io } from "socket.io-client";
 import { ref, onMounted } from "vue";
 import { useGameEngine } from "@/composables/useGameEngine";
 import type GameFormat from "@/view-models/gameFormat";
+import SERVER_URL from "@/utils/serverUrl";
 
 const { socket, setSocket } = useGameEngine();
 const clickedStart = ref(false);
@@ -29,8 +30,7 @@ function goToPrivacy() {
 }
 
 function registerSocket() {
-  const serverUrl = process.env.VUE_APP_SERVER || "http://localhost:3000";
-  const newSocket = io(serverUrl);
+  const newSocket = io(SERVER_URL);
   setSocket(newSocket);
   socket.value.on("room", (roomId: string) => {
     hasStarted.value = true;
