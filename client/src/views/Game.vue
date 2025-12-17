@@ -59,8 +59,6 @@
       </div>
 
       <div class="top-left">
-        <PFLittleButton type="github" popover-text="Open repo" @clicked="goToGithub()"></PFLittleButton>
-        <PFLittleButton type="pwa" popover-text="Install as app" @clicked="installPWA()"></PFLittleButton>
         <PFLittleButton type="settings" popover-text="Settings" @clicked="()=>{settings = true;}"></PFLittleButton>
         <div class="voting-on" v-if="votingOnName">
           <p class="voting-on-label">Voting on: <b>{{ votingOnName }}</b></p>
@@ -132,8 +130,6 @@ import Settings from "../components/SettingsModal.vue";
 import Sharing from "../components/SharingModal.vue";
 import type GameFormat from "@/view-models/gameFormat";
 import SERVER_URL from "@/utils/serverUrl";
-
-let showInstallPwa = ref(false);
 const modal = ref(true);
 const settings = ref(false)
 const showCopiedToClipboard = ref(false);
@@ -153,14 +149,6 @@ const {
 } = useGameEngine();
 const showShareModal = ref(false);
 
-let deferredPrompt: any;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  showInstallPwa.value = true;
-});
-
 function saveSettings(gameType: GameFormat) {
   settings.value = false;
   socket.value.emit("gameTypeChanged", gameType);
@@ -168,10 +156,6 @@ function saveSettings(gameType: GameFormat) {
 
 async function dismissModal() {
   showShareModal.value = false;
-}
-
-function installPWA() {
-  deferredPrompt.prompt();
 }
 
 onMounted(() => {
@@ -231,10 +215,6 @@ function playerHasVoted() {
 
 function copyToClipboard() {
   showShareModal.value = true;
-}
-
-function goToGithub() {
-  open("https://github.com/LukeGarrigan/planfree.dev");
 }
 
 function joiningAGame() {
