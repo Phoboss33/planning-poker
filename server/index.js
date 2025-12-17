@@ -29,7 +29,7 @@ let tickets = [];
 let gameType = [];
 
 let gameTypes = [
-    { name: 'Fibonacci', values: [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, '?'] },
+    { name: 'Оценка', values: [1, 2, 4, 6, 8, 12, 16, 20, 30, 40, '?'] },
 ]
 
 io.on('connection', (socket) => {
