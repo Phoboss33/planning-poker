@@ -2,9 +2,11 @@ const app = require('express')();
 const http = require('http').createServer(app);
 const short = require('short-uuid');
 require('dotenv').config()
+const DEFAULT_ORIGINS = ['http://localhost:8081', 'http://localhost:8080'];
+const ALLOWED_ORIGINS = (process.env.ORIGIN || '').split(',').map(o => o.trim()).filter(Boolean);
 const io = require("socket.io")(http, {
     cors: {
-        origin: process.env.ORIGIN || 'http://localhost:8081',
+        origin: ALLOWED_ORIGINS.length ? ALLOWED_ORIGINS : DEFAULT_ORIGINS,
         methods: ["GET", "POST"]
     }
 });
@@ -28,8 +30,6 @@ let gameType = [];
 
 let gameTypes = [
     { name: 'Fibonacci', values: [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, '?'] },
-    { name: 'T-Shirt', values: ['XXS', 'XS', 'S', 'M', 'L', 'XL', '?'] },
-    { name: 'Powers of 2', values: [0, 1, 2, 4, 8, 16, 32, 64, '?'] },
 ]
 
 io.on('connection', (socket) => {
