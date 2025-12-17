@@ -130,7 +130,7 @@ import {useGameEngine} from "@/composables/useGameEngine";
 import PFLittleButton from "@/components/LittleButton.vue";
 import Settings from "../components/SettingsModal.vue";
 import Sharing from "../components/SharingModal.vue";
-import GameFormat from "@/view-models/gameFormat";
+import type GameFormat from "@/view-models/gameFormat";
 
 let showInstallPwa = ref(false);
 const modal = ref(true);

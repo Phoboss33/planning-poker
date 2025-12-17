@@ -3,7 +3,7 @@ import router from "@/router";
 import { io } from "socket.io-client";
 import { ref, onMounted } from "vue";
 import { useGameEngine } from "@/composables/useGameEngine";
-import GameFormat from "@/view-models/gameFormat";
+import type GameFormat from "@/view-models/gameFormat";
 
 const { socket, setSocket } = useGameEngine();
 const clickedStart = ref(false);

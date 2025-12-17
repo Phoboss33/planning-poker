@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import GameFormat from '@/view-models/gameFormat';
+import type GameFormat from '@/view-models/gameFormat';
 import { defineEmits } from 'vue';
 let gameFormats = JSON.parse(localStorage.getItem('gameTypes'));
 
